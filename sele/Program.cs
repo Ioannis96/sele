@@ -5,18 +5,22 @@ using System.ComponentModel;
 using System.IO;
 using OfficeOpenXml;
 using Microsoft.Extensions.Configuration;
+using System.Security.Cryptography.X509Certificates;
+using System.Reflection.Metadata;
+using System.Drawing.Text;
+using sele;
+
+
 
 
 //ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
 //string excelFilePath = @"E:\Excel\pathSpells.xlsx";
 //GetLinks(excelFilePath);
 
-Sele();
+SeleniumGetSpellProperties();
 
 Console.WriteLine(  "telos");
 Console.ReadLine();
-
-
 
 static void GetLinks(string excelFilePath)
 {
@@ -51,8 +55,10 @@ static void GetLinks(string excelFilePath)
     }
 }
 
-static void Sele()
+static void SeleniumGetSpellProperties()
 {
+    bool hasSpellInDesc = false;
+
     try
     {
         var driver = new ChromeDriver();
@@ -66,8 +72,23 @@ static void Sele()
         //    Console.WriteLine(spell.Text);
         //}
 
-        IReadOnlyList<IWebElement> namesh1 = driver.FindElements(By.TagName("h1"));
-        IReadOnlyList<IWebElement> namesh4 = driver.FindElements(By.TagName("h4"));
+        IWebElement descriptionElement = driver.FindElement(By.ClassName("article-text"));
+
+
+        IReadOnlyList<IWebElement> namesh1 = descriptionElement.FindElements(By.TagName("h1"));
+        IReadOnlyList<IWebElement> namesh4 = descriptionElement.FindElements(By.TagName("h4"));
+
+
+        string name = descriptionElement.FindElements(By.TagName("h1"))[0].Text;
+
+
+        //if it finds an h4 element inside the 
+        if (namesh4.Count > 0)
+        {
+            hasSpellInDesc = true;
+        }
+
+
 
         foreach (var h4 in namesh4)
         {
@@ -76,8 +97,6 @@ static void Sele()
         Console.WriteLine(namesh1.Count());
         Console.WriteLine(namesh4.Count());
 
-
-        IWebElement descriptionElement = driver.FindElement(By.ClassName("article-text"));
 
         IReadOnlyList<IWebElement> elements = descriptionElement.FindElements(By.TagName("p"));
 
@@ -102,3 +121,4 @@ static void Sele()
         throw;
     }
 }
+
