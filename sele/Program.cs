@@ -60,7 +60,7 @@ static void SeleniumGetSpellProperties()
     try
     {
         var driver = new ChromeDriver();
-        driver.Navigate().GoToUrl("https://www.d20pfsrd.com/magic/all-spells/m/minor-phantom-object/");
+        driver.Navigate().GoToUrl("https://www.d20pfsrd.com/magic/all-spells/e/envious-urge/");
 
 
         IWebElement descriptionElement = driver.FindElement(By.ClassName("article-text"));
@@ -91,16 +91,18 @@ static void SeleniumGetSpellProperties()
         Console.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
 
-        string name = spellDescriptionArray[0];
-        string school = "";
-        string level = "";
-        string castingTime = "";
-        string components = "";
-        string range = "";
-        string target = "";
-        string duration = "";
-        string savingThrow = "";
-        string description = "";
+        string? name = spellDescriptionArray[0];
+        string? school = "";
+        string? level = "";
+        string? castingTime = "";
+        string? components = "";
+        string? effect = "";
+        string? range = "";
+        string? target = "";
+        string? area = "";
+        string? duration = "";
+        string? savingThrow = "";
+        string? description = "";
 
         int semicolonIndex = spellDescriptionArray[1].IndexOf(';');
         int castIndex = spellDescriptionArray[3].IndexOf("Casting Time ");
@@ -117,8 +119,47 @@ static void SeleniumGetSpellProperties()
 
             components = castArray[1].Substring("Components ".Length).Trim();
 
+            if (spellDescriptionArray[4].ToLower() == "effect")
+            {
+                Console.WriteLine(  "mpenei sto effect   ");
+                string[] effectArray = spellDescriptionArray[5].Split('\n');
+                int len = effectArray.Length;
+
+                for (int i = 0; i < len; i++)
+                {
+                    if (effectArray[i].ToLower().Contains("range"))
+                    {
+                        range = effectArray[i].Substring(5);
+                    }
+                    else if (effectArray[i].ToLower().Contains("area"))
+                    {
+                        area = effectArray[i].Substring(4);
+                    }
+                    else if (effectArray[i].ToLower().Contains("effect"))
+                    {
+                        effect = effectArray[i].Substring(6);
+                    }
+                    else if (effectArray[i].ToLower().Contains("targets"))
+                    {
+                        target = effectArray[i].Substring(7);
+                    }
+                    else if (effectArray[i].ToLower().Contains("target"))
+                    {
+                        target = effectArray[i].Substring(6);
+                    }
+                    else if (effectArray[i].ToLower().Contains("duration"))
+                    {
+                        duration = effectArray[i].Substring(8);
+                    }
+                    else if (effectArray[i].ToLower().Contains("saving throw"))
+                    {
+                        Console.WriteLine(effectArray[i] + "SDDDDSDD");
+                    }
+                }
+            }
 
         }
+
 
 
         Console.WriteLine("Name: " + name);
