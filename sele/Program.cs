@@ -8,8 +8,6 @@ using Microsoft.Extensions.Configuration;
 using System.Security.Cryptography.X509Certificates;
 using System.Reflection.Metadata;
 using System.Drawing.Text;
-using sele;
-
 
 
 
@@ -19,7 +17,7 @@ using sele;
 
 SeleniumGetSpellProperties();
 
-Console.WriteLine(  "telos");
+Console.WriteLine("telos");
 Console.ReadLine();
 
 static void GetLinks(string excelFilePath)
@@ -62,56 +60,83 @@ static void SeleniumGetSpellProperties()
     try
     {
         var driver = new ChromeDriver();
-        driver.Navigate().GoToUrl("https://www.d20pfsrd.com/magic/all-spells/a/align-weapon/");
+        driver.Navigate().GoToUrl("https://www.d20pfsrd.com/magic/all-spells/m/minor-phantom-object/");
 
-        //driver.Navigate().GoToUrl(
-        //IReadOnlyList<IWebElement> spells = driver.FindElements(By.TagName("li"));
-        //Console.WriteLine(spells.Count());
-        //foreach (var spell in spells)
-        //{
-        //    Console.WriteLine(spell.Text);
-        //}
 
         IWebElement descriptionElement = driver.FindElement(By.ClassName("article-text"));
-
-
         IReadOnlyList<IWebElement> namesh1 = descriptionElement.FindElements(By.TagName("h1"));
         IReadOnlyList<IWebElement> namesh4 = descriptionElement.FindElements(By.TagName("h4"));
+        IReadOnlyList<IWebElement> elements = descriptionElement.FindElements(By.TagName("p"));
+        List<string> spellDescriptionArray = new List<string>();
 
-
-        string name = descriptionElement.FindElements(By.TagName("h1"))[0].Text;
-
+        spellDescriptionArray.Add(namesh1[0].Text);
 
         //if it finds an h4 element inside the 
         if (namesh4.Count > 0)
         {
             hasSpellInDesc = true;
+
+            string name4 = namesh4[0].Text;
+            Console.WriteLine("There is a spell in this spell named: " + name4);
         }
 
+        int counter = 0;
 
-
-        foreach (var h4 in namesh4)
-        {
-            Console.WriteLine(h4.Text);
-        }
-        Console.WriteLine(namesh1.Count());
-        Console.WriteLine(namesh4.Count());
-
-
-        IReadOnlyList<IWebElement> elements = descriptionElement.FindElements(By.TagName("p"));
-
+        Console.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         foreach (var element in elements)
         {
-            Console.WriteLine(element.Text);
+            spellDescriptionArray.Add(element.Text);
+            Console.WriteLine( ++counter + element.Text );
+        }
+        Console.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+
+        string name = spellDescriptionArray[0];
+        string school = "";
+        string level = "";
+        string castingTime = "";
+        string components = "";
+        string range = "";
+        string target = "";
+        string duration = "";
+        string savingThrow = "";
+        string description = "";
+
+        int semicolonIndex = spellDescriptionArray[1].IndexOf(';');
+        int castIndex = spellDescriptionArray[3].IndexOf("Casting Time ");
+
+        school = spellDescriptionArray[1].Substring(0, semicolonIndex).Trim();
+
+        level = spellDescriptionArray[1].Substring(semicolonIndex + 7).Trim();
+
+        if (spellDescriptionArray[2].ToLower() == "casting")
+        {
+            string[] castArray = spellDescriptionArray[3].Split('\n');
+
+            castingTime = castArray[0].Substring("Casting Time ".Length).Trim();
+
+            components = castArray[1].Substring("Components ".Length).Trim();
+
+
         }
 
 
-        //IReadOnlyList<IWebElement> elements = driver.FindElements(By.TagName("p"));
-        //foreach (IWebElement e in elements)
-        //{
-        //    System.Console.WriteLine(e.Text);
-        //}
+        Console.WriteLine("Name: " + name);
+        Console.WriteLine("School: " + school);
+        Console.WriteLine("Level: " + level);
+        Console.WriteLine("Casting Time: " + castingTime);
+        Console.WriteLine("Components: " + components);
+        Console.WriteLine("Range: " + range);
+        Console.WriteLine("Target: " + target);
+        Console.WriteLine("Duration: " + duration);
+        Console.WriteLine("Saving Throw: " + savingThrow);
+        Console.WriteLine("Description: " + description);
 
+
+        //foreach (string element in strings)
+        //{
+        //        Console.WriteLine(element);
+        //}
 
         driver.Quit();
     }
