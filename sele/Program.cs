@@ -20,6 +20,14 @@ SeleniumGetSpellProperties();
 Console.WriteLine("telos");
 Console.ReadLine();
 
+
+//testnig funs
+//testnig funs
+//testnig funs
+//testnig funs
+//testnig funs
+//testnig funs
+//testnig funs
 static void GetLinks(string excelFilePath)
 {
     try
